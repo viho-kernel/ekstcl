@@ -18,6 +18,7 @@ resource "aws_instance" "docker" {
   vpc_security_group_ids      = [aws_security_group.ruler.id]
   user_data                   = file("${path.module}/space.sh")
   user_data_replace_on_change = false
+  iam_instance_profile        = aws_iam_instance_profile.eks_launcher_profile.name
   tags = {
     Name        = "docker-instance"
     Environment = "dev"
