@@ -13,12 +13,15 @@ provider "aws" {
 }
 
 resource "aws_instance" "docker" {
-  ami                         = local.ami
-  instance_type               = "t3.medium"
-  vpc_security_group_ids      = [aws_security_group.ruler.id]
-  user_data                   = file("${path.module}/space.sh")
-  user_data_replace_on_change = false
-  iam_instance_profile        = aws_iam_instance_profile.eks_launcher_profile.name
+  ami                    = local.ami
+  instance_type          = "t3.medium"
+  vpc_security_group_ids = [aws_security_group.ruler.id]
+  user_data = file("${path.module}/space.sh", {
+    aws_access_key = var.aws_access_key
+    aws_secret_key = var.aws_secret_key
+  })
+
+
   tags = {
     Name        = "docker-instance"
     Environment = "dev"
@@ -35,6 +38,26 @@ resource "aws_instance" "docker" {
     }
   }
 
+}
+
+resource "terraform_data" "cluster_destroy" {
+  input = {
+    host     = aws_instance.docker.public_ip
+    password = var.ssh_password
+  }
+
+  provisioner "remote-exec" {
+    when = destroy
+    inline = [
+      "eksctl delete cluster -f /home/ec2-user/eksctl/eks.yaml --wait"
+    ]
+    connection {
+      type     = "ssh"
+      host     = self.input.host
+      user     = "ec2-user"
+      password = self.input.password
+    }
+  }
 }
 
 resource "aws_security_group" "ruler" {
