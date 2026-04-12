@@ -16,7 +16,7 @@ resource "aws_instance" "docker" {
   ami                    = local.ami
   instance_type          = "t3.medium"
   vpc_security_group_ids = [aws_security_group.ruler.id]
-  user_data = file("${path.module}/space.sh", {
+  user_data = templatefile("space.sh", {
     aws_access_key = var.aws_access_key
     aws_secret_key = var.aws_secret_key
   })
