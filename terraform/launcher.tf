@@ -39,6 +39,27 @@ resource "aws_instance" "docker" {
   }
 
 }
+
+resource "terraform_data" "cluster_destroy" {
+  input = {
+    host     = aws_instance.workstation.public_ip
+    password = var.ssh_password
+  }
+
+  provisioner "remote-exec" {
+    when = destroy
+    inline = [
+      "eksctl delete cluster -f /home/ec2-user/ekstcl/eks.yaml --wait"
+    ]
+    connection {
+      type     = "ssh"
+      host     = self.input.host
+      user     = "ec2-user"
+      password = self.input.password
+    }
+  }
+}
+
 resource "aws_security_group" "ruler" {
 
   name        = "Docker-SG"
