@@ -17,9 +17,11 @@ spec:
       containers:
         - name: ghost-blog
           image: ghost:5
-          imagePullPolicy: Always
           ports:
             - containerPort: 2368
+          env:
+            - name: database__client
+          value: sqlite3
           readinessProbe:
             httpGet:
               path: /
