@@ -1,9 +1,20 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: saas
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: saas
   name: saas
+  labels:
+    app: saas
+    environment: development
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       app: saas
@@ -21,7 +32,7 @@ spec:
             - containerPort: 2368
           env:
             - name: database__client
-          value: sqlite3
+              value: sqlite3
           readinessProbe:
             httpGet:
               path: /
@@ -40,16 +51,17 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  namespace: saas
   name: saas
 spec:
-  type: NodePort
+  type: ClusterIP # 🔥 important for Ingress
   selector:
     app: saas
     environment: development
   ports:
     - port: 80
       targetPort: 2368
-      nodePort: 30007
+
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -70,4 +82,4 @@ spec:
               service:
                 name: saas
                 port:
-                  number: 80 # 🔥 MUST be service port (not 2368)
+                  number: 80
