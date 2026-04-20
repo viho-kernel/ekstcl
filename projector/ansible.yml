@@ -4,5 +4,5 @@
     - name: ping
       ansible.builtin.ping:
 
-        #   - name: create new deployment
-        #    command: kubectl apply -f /home/ubuntu/Deployment.yaml
+    - name: create new deployment
+      command: kubectl apply -f /home/ubuntu/Deployment.yaml
