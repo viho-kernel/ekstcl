@@ -23,9 +23,9 @@ metadata:
   labels:
     app: k8-roboshop
 spec:
-  type: LoadBalancer
+  type: NodePort
   selector:
-      app: k8-roboshop
+    app: k8-roboshop
   ports:
     - protocol: TCP
       port: 8080
