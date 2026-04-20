@@ -1,5 +1,5 @@
 - hosts: node
-  become: true
+  become: yes
   tasks:
     - name: ping
       ansible.builtin.ping:
