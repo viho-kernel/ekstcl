@@ -23,12 +23,12 @@ COPY app.py .
 ENV PATH=/root/.local/bin:$PATH
 ENV PYTHONUNBUFFERED=1
 
-# Expose port
-EXPOSE 5000 22
-
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:5000/health')"
 
 # Run application
 CMD ["python", "app.py"]
+
+# Expose port
+EXPOSE 5000
