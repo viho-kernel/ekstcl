@@ -24,7 +24,7 @@ ENV PATH=/root/.local/bin:$PATH
 ENV PYTHONUNBUFFERED=1
 
 # Expose port
-EXPOSE 5000
+EXPOSE 5000 22
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
