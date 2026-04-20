@@ -1,0 +1,8 @@
+- hosts: node
+  become: true
+  tasks:
+    - name: ping
+      ansible.builtin.ping:
+
+        #   - name: create new deployment
+        #    command: kubectl apply -f /home/ubuntu/Deployment.yaml
